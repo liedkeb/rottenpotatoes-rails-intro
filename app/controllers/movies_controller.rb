@@ -13,16 +13,12 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     
-    return @movies if params[:sort_by].nil? 
-    
+    #return @movies if params[:sort_by].nil? 
+    return unless @movies.column_names.include?(params[:sort_by])
     if params[:sort_by] == 'title'
-      # @movies.order!("title")
       @movies = @movies.sort {|a,b| a.title <=> b.title }
-      @sort='title' 
     elsif params[:sort_by] == 'date'
-      #@movies.order!("release_date")
       @movies = @movies.sort {|a,b| a.release_date <=> b.release_date }
-      @sort='date' 
     end
   end
 
@@ -53,13 +49,6 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-  
-#  def title
-#    @movies = Movie.all.order(:title)
-#  end
-  
-#  def release_date
-#    @movies = Movie.all.order(:release_date)
-#  end
+
 
 end

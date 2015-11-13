@@ -3,4 +3,7 @@ module MoviesHelper
   def oddness(count)
     count.odd? ?  "odd" :  "even"
   end
+  def sorted(thclass)
+    'hilite' if params[:sort_by] == thclass
+  end
 end
