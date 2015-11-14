@@ -14,12 +14,14 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     
     @all_ratings = Movie.filter_list
-    @movies = Movie.filter_using_keys(params[:ratings]) 
-    #return @movies if params[:sort_by].nil? 
-    return unless @movies.column_names.include?(params[:sort_by])
+    # @movies = Movie.filter_using_keys(params[:ratings]) 
+    # return @movies if params[:sort_by].nil? 
+    # return unless @movies.column_names.include?(params[:sort_by])
     
 
-    @movies = @movies.sort {|a,b| a.send(params[:sort_by].to_sym) <=> b.send(params[:sort_by].to_sym) }
+    # @movies = @movies.sort {|a,b| a.send(params[:sort_by].to_sym) <=> b.send(params[:sort_by].to_sym) }
+    
+    @movies = Movie.sort_by(params[:sort_by])
     
     # @movies = Movie.order(params[:sort_by]) if params[:sort_by]
   end
