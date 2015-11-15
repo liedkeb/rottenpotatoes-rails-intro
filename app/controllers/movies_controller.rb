@@ -1,15 +1,16 @@
 class MoviesController < ApplicationController
 
-  before_filter :before
-  after_filter :after
+  before_filter :before, :only => :index
+  after_filter :after, :only => :index
 
   def before
     if session[:ratings].nil?
       session[:ratings]=Hash.new
       Movie.filter_list.each {|a| session[:ratings][a]=1} 
     end
-    flash.keep and redirect_to movies_url(ratings: session[:ratings], sort: session[:sort], commit: 'Refresh') if 
-      session[:sort].present? && session[:ratings].present? && (params[:ratings].nil? and params[:sort].nil?)
+    flash.keep and redirect_to movies_url(ratings: params[:ratings]||session[:ratings], sort: params[:sort]||session[:sort]) if 
+      session[:sort].present? and session[:ratings].present? and (params[:ratings].nil? or params[:sort].nil?)
+
     params[:ratings] ||= session[:ratings]
     params[:sort] ||= session[:sort]
   end
@@ -24,6 +25,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+
 
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
