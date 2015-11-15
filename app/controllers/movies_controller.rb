@@ -9,10 +9,10 @@ class MoviesController < ApplicationController
       Movie.filter_list.each {|a| session[:ratings][a]=1} 
     end
     params[:ratings] ||= session[:ratings]
-    params[:sort_by] ||= session[:sort_by]
+    params[:sort] ||= session[:sort]
   end
   def after
-    session[:sort_by] = params[:sort_by]
+    session[:sort] = params[:sort]
     session[:ratings] = params[:ratings]
   end
   def show
@@ -26,10 +26,10 @@ class MoviesController < ApplicationController
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
     @all_ratings = Movie.filter_list
-    # @movies = Movie.sort_by(params[:sort_by])
+    # @movies = Movie.sort_by(params[:sort])
     
     
-    @movies = Movie.filter_using_keys(params[:ratings]).reorder(params[:sort_by])
+    @movies = Movie.filter_using_keys(params[:ratings]).reorder(params[:sort])
   end
 
   def new

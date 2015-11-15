@@ -5,6 +5,6 @@ module MoviesHelper
   end
   
   def sorted(thclass)
-    'hilite' if params[:sort_by] == thclass
+    'hilite' if params[:sort] == thclass
   end
 end
