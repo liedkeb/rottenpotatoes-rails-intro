@@ -1,7 +1,20 @@
 class MoviesController < ApplicationController
 
-  # before_action :update_state, only: :index
+  before_filter :before
+  after_filter :after
 
+  def before
+    if session[:ratings].nil?
+      session[:ratings]=Hash.new
+      Movie.filter_list.each {|a| session[:ratings][a]=1} 
+    end
+    params[:ratings] ||= session[:ratings]
+    params[:sort_by] ||= session[:sort_by]
+  end
+  def after
+    session[:sort_by] = params[:sort_by]
+    session[:ratings] = params[:ratings]
+  end
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -9,12 +22,7 @@ class MoviesController < ApplicationController
   end
 
   def index
-    #params[:ratings] = session[:ratings] if params[:sort_by].present? and params[:ratings].nil?
-    #params[:sort_by] = session[:sort_by] if params[:sort_by].nil? and params[:ratings].present?
 
-    params[:ratings] ||= session[:ratings]
-    params[:sort_by] ||= session[:sort_by]
-    
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
     @all_ratings = Movie.filter_list
@@ -22,16 +30,16 @@ class MoviesController < ApplicationController
     
     
     @movies = Movie.filter_using_keys(params[:ratings]).reorder(params[:sort_by])
-    session[:sort_by] = params[:sort_by]
-    session[:ratings] = params[:ratings]
   end
 
   def new
     # default: render 'new' template
+   
   end
 
   def create
     @movie = Movie.create!(movie_params)
+    
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
