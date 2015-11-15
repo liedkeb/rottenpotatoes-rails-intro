@@ -11,6 +11,19 @@ class MoviesController < ApplicationController
   end
 
   def index
+    # 1. read params[:ratings] and creating instance variable
+    # 2. we need to extract what checkboxes selected
+    # 3. then, based inst variable set checkboxes checked accordingly to 1.
+
+=begin
+    if params[:ratings].present?
+      @init_checked = params[:ratings].keys
+    end
+=end
+    
+    params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
+    
+    # ["P", "G", "PG-13", "R"]
     @all_ratings = Movie.filter_list
     # @movies = Movie.sort_by(params[:sort_by])
     @movies = Movie.filter_using_keys(params[:ratings]).reorder(params[:sort_by])
