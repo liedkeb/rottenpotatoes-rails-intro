@@ -1,9 +1,5 @@
 class MoviesController < ApplicationController
 
-  def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
-  end
-
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -11,16 +7,10 @@ class MoviesController < ApplicationController
   end
 
   def index
+    
     # 1. read params[:ratings] and creating instance variable
     # 2. we need to extract what checkboxes selected
     # 3. then, based inst variable set checkboxes checked accordingly to 1.
-
-=begin
-    if params[:ratings].present?
-      @init_checked = params[:ratings].keys
-    end
-=end
-    
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
     # ["P", "G", "PG-13", "R"]
@@ -56,4 +46,9 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+  
+  private 
+    def movie_params
+      params.require(:movie).permit(:title, :rating, :description, :release_date)
+    end
 end
