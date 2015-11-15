@@ -8,8 +8,8 @@ class MoviesController < ApplicationController
       session[:ratings]=Hash.new
       Movie.filter_list.each {|a| session[:ratings][a]=1} 
     end
-    flash.keep and redirect_to movies_url(ratings: session[:ratings], sort: session[:sort], submit: 'Refresh') if 
-      session[:sort] && session[:ratings] && !(params[:ratings] || params[:sort])
+    flash.keep and redirect_to movies_url(ratings: session[:ratings], sort: session[:sort], commit: 'Refresh') if 
+      session[:sort].present? && session[:ratings].present? && (params[:ratings].nil? and params[:sort].nil?)
     params[:ratings] ||= session[:ratings]
     params[:sort] ||= session[:sort]
   end
