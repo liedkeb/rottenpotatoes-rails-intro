@@ -1,5 +1,7 @@
 class MoviesController < ApplicationController
 
+  # before_action :update_state, only: :index
+
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -7,16 +9,21 @@ class MoviesController < ApplicationController
   end
 
   def index
+    #params[:ratings] = session[:ratings] if params[:sort_by].present? and params[:ratings].nil?
+    #params[:sort_by] = session[:sort_by] if params[:sort_by].nil? and params[:ratings].present?
+
+    params[:ratings] ||= session[:ratings]
+    params[:sort_by] ||= session[:sort_by]
     
-    # 1. read params[:ratings] and creating instance variable
-    # 2. we need to extract what checkboxes selected
-    # 3. then, based inst variable set checkboxes checked accordingly to 1.
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
-    # ["P", "G", "PG-13", "R"]
     @all_ratings = Movie.filter_list
     # @movies = Movie.sort_by(params[:sort_by])
+    
+    
     @movies = Movie.filter_using_keys(params[:ratings]).reorder(params[:sort_by])
+    session[:sort_by] = params[:sort_by]
+    session[:ratings] = params[:ratings]
   end
 
   def new
