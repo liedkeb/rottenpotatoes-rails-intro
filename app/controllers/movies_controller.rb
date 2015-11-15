@@ -12,9 +12,9 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.filter_list
-    # @movies = Movie.filter_using_keys(params[:ratings]) 
-
     @movies = Movie.sort_by(params[:sort_by])
+    @movies &= Movie.filter_using_keys(params[:ratings]) 
+
   end
 
   def new

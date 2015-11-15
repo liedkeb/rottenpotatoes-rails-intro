@@ -12,4 +12,9 @@ class Movie < ActiveRecord::Base
       self.all
     end
   end
+  
+  def self.filter_using_keys(filter_arg)
+    return self.all if filter_arg==nil
+    self.where(rating: filter_arg.keys)
+  end
 end
