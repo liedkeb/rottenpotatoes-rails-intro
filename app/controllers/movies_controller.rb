@@ -4,10 +4,10 @@ class MoviesController < ApplicationController
   after_filter :after, :only => :index
 
   def before
-    if session[:ratings].nil?
-      session[:ratings]=Hash.new
-      Movie.filter_list.each {|a| session[:ratings][a]=1} 
-    end
+    # providing default value for session ratings by first start of the page
+    # all ratings should be selected if session[:ratings] is nil
+    session[:ratings] ||= Hash[Movie.filter_list.map {|v| [v,1]}]
+    # manualy create url if something is wrong with params variables
     flash.keep and redirect_to movies_url(ratings: params[:ratings]||session[:ratings], sort: params[:sort]||session[:sort]) if 
       session[:sort].present? and session[:ratings].present? and (params[:ratings].nil? or params[:sort].nil?)
 
