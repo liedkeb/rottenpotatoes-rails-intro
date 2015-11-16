@@ -8,9 +8,8 @@ class MoviesController < ApplicationController
     # all ratings should be selected if session[:ratings] is nil
     session[:ratings] ||= Hash[Movie.filter_list.map {|v| [v,1]}]
     # manualy create url if something is wrong with params variables
-    flash.keep and redirect_to movies_url(ratings: params[:ratings]||session[:ratings], sort: params[:sort]||session[:sort]) if 
-      session[:sort].present? and session[:ratings].present? and (params[:ratings].nil? or params[:sort].nil?)
-
+    flash.keep and redirect_to movies_url(ratings: params[:ratings]||session[:ratings], sort: params[:sort]||session[:sort]) if
+      (session[:ratings].present? and params[:ratings].nil?) or (session[:sort].present? and params[:sort].nil?)
     params[:ratings] ||= session[:ratings]
     params[:sort] ||= session[:sort]
   end
@@ -25,8 +24,6 @@ class MoviesController < ApplicationController
   end
 
   def index
-
-
     params[:ratings].present? ? @init_checked = params[:ratings].keys : @init_checked = []
     
     @all_ratings = Movie.filter_list
